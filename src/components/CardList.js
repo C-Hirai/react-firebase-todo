@@ -7,23 +7,25 @@ const StyledCard = styled(Card)`
   margin-top: 10px;
 `;
 
-const StyledDiv = styled.div`
-  margin: auto 0px auto auto;
+const StyledCardHeader = styled(Card.Header)`
+  display: flex;
 `;
-
-const StyledButton = styled(Button)`
-  align-self: flex-end;
-`;
-
-const StyledCardHeader = styled(Card.Header)``;
 
 const StyledCardBody = styled(Card.Body)`
   display: flex;
   flex-direction: column;
 `;
 
+const DeleteButtonContainer = styled.div`
+  margin: auto 0 auto auto;
+`;
+
+const DoneButtonContainer = styled.div`
+  align-self: flex-end;
+`;
+
 const CardList = ({ thread }) => {
-  const onSubmit = () => {
+  const Update = () => {
     firestore()
       .collection("threads")
       .doc(thread.id)
@@ -35,6 +37,13 @@ const CardList = ({ thread }) => {
       });
   };
 
+  const Delete = () => {
+    firestore()
+      .collection("threads")
+      .doc(thread.id)
+      .delete();
+  };
+
   return (
     <>
       <StyledCard>
@@ -44,15 +53,20 @@ const CardList = ({ thread }) => {
           }}
         >
           {thread.title}
+          <DeleteButtonContainer>
+            <Button variant="danger" onClick={Delete}>
+              delete
+            </Button>
+          </DeleteButtonContainer>
         </StyledCardHeader>
         {!thread.doneFlg && (
           <StyledCardBody>
             <Card.Text>{thread.content}</Card.Text>
-            <StyledDiv>
-              <StyledButton variant="success" onClick={onSubmit}>
+            <DoneButtonContainer>
+              <Button variant="success" onClick={Update}>
                 done
-              </StyledButton>
-            </StyledDiv>
+              </Button>
+            </DoneButtonContainer>
           </StyledCardBody>
         )}
       </StyledCard>
